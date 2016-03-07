@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F5D6D2E1-6FFD-402B-8EE3-DED4FE407028}</ProjectGuid>
+    <ProjectGuid>{0862DFF6-A631-4AA7-A051-5557E34EA5D5}</ProjectGuid>
     <RootNamespace>E06_Lerp</RootNamespace>
     <ProjectName>E06_Lerp</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
@@ -161,6 +161,7 @@ xcopy "$(SolutionDir)include\RE\Shaders" "$(SolutionDir)_Binary\Shaders" /y</Com
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\RE\ReEngAppClass.h" />
     <ClInclude Include="..\res\Resource.h" />
     <ClInclude Include="AppClass.h" />
   </ItemGroup>
