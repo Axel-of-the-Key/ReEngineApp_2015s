@@ -1,41 +1,35 @@
 #include "AppClass.h"
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("Sandbox"); // Window Name
-
-	// Set the clear color based on Microsoft's CornflowerBlue (default in XNA)
-	//if this line is in Init Application it will depend on the .cfg file, if it
-	//is on the InitVariables it will always force it regardless of the .cfg
+	super::InitWindow("E06Lerp"); // Window Name	
 	m_v4ClearColor = vector4(0.4f, 0.6f, 0.9f, 0.0f);
 }
 
 void AppClass::InitVariables(void)
 {
-	m_selection = std::pair<int, int>(-1, -1);
 	//Set the camera at a position other than the default
-	m_pCameraMngr->SetPositionTargetAndView(vector3(0.0f, 2.5f, 12.0f), vector3(0.0f, 2.5f, 11.0f), REAXISY);
+	m_pCameraMngr->SetPositionTargetAndView
+		(vector3(0.0f, 0.0f, 35.0f)
+		,vector3(0.0f, 0.0f, 0.0f), 
+		REAXISY);	
 
-	m_pLightMngr->SetColor(REWHITE, 0);
-	m_pLightMngr->SetIntensity(0.1f, 0);
-	m_pLightMngr->SetColor(REWHITE, 1);
-	m_pLightMngr->SetIntensity(0.5f, 1);
-	m_pLightMngr->SetPosition(vector3(0.0f, 1.0f,-1.0f), 1);
+	m_nObjects = 10;
 
-	//Load a model onto the Mesh manager
-	//m_pMeshMngr->LoadModel("tests\\Cubev.fbx", "Unikitty");
-	int nCubes = 10;
-	vector3 v3Start(-nCubes/2.0f, 0.0f, -nCubes / 2.0f);
-	m_pMeshMngr->LoadModel("Cube.obj", "ElCubo");
-	m_pMeshMngr->SetShaderProgramByName("ElCubo", "Phong");
-	for (uint n = 0; n < nCubes; n++)
+
+	m_pMatrix = new matrix4[m_nObjects];
+	m_pSphere = new PrimitiveClass[m_nObjects];	
+
+	vector3 v3Start(-m_nObjects, 0.0f, 0.0f);
+	vector3 v3End(m_nObjects, 0.0f, 0.0f);
+	vector3 v3Current;
+
+	for (uint i = 0; i < m_nObjects; i++)
 	{
-		if (v3Start != vector3(0.0f))
-		{
-			String sName = "Cube_" + std::to_string(n);
-			m_pMeshMngr->LoadModel("Cube.obj", sName, false, glm::translate(v3Start));
-			m_pMeshMngr->SetShaderProgramByName(sName, "Phong");
-		}
-		v3Start += vector3(1.0f, 0.0f, 1.0f);
+		float fPercent = MapValue(static_cast<float>(i), 0.0f, static_cast<float>(m_nObjects - 1), 0.0f, 1.0f);
+		v3Current = glm::lerp(v3Start, v3End, fPercent);
+		m_pSphere[i].GenerateSphere(0.5f, 5, RERED);
+		m_pMatrix[i] = glm::translate(v3Current);
+		
 	}
 }
 
@@ -93,6 +87,15 @@ void AppClass::Display(void)
 		m_pMeshMngr->AddGridToQueue(1.0f, REAXIS::XY, REBLUE * 0.75f); //renders the XY grid with a 100% scale
 		break;
 	}
+
+	matrix4 m4Projection = m_pCameraMngr->GetProjectionMatrix();
+	matrix4 m4View = m_pCameraMngr->GetViewMatrix();
+
+	for (uint i = 0; i < m_nObjects; i++)
+	{
+		m_pSphere[i].Render(m4Projection, m4View, m_pMatrix[i]);
+	}
+	
 	
 	m_pMeshMngr->Render(); //renders the render list
 
@@ -101,5 +104,15 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	if (m_pSphere != nullptr)
+	{	
+		delete[] m_pSphere;
+		m_pSphere = nullptr;
+	}
+	if (m_pMatrix != nullptr)
+	{
+		delete[] m_pMatrix;
+		m_pMatrix = nullptr;
+	}
 	super::Release(); //release the memory of the inherited fields
 }
