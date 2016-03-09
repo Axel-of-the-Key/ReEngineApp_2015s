@@ -13,6 +13,9 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 class AppClass : public ReEngAppClass
 {
 	float fDuration = 1.0f; //Time Duration of the stops
+	vector3* locations;
+	int currentStep = 0;
+	float trackTime = 0;
 public:
 	typedef ReEngAppClass super;
 	/*

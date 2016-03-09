@@ -14,6 +14,18 @@ void AppClass::InitVariables(void)
 	m_pMeshMngr->LoadModel("Sorted\\WallEye.bto", "WallEye");
 
 	fDuration = 1.0f;
+	locations = new vector3[11];
+	locations[0] = vector3(-4.0f, -2.0f, 5.0f);
+	locations[1] = vector3(1.0f, -2.0f, 5.0f);
+	locations[2] = vector3(-3.0f, -1.0f, 3.0f);
+	locations[3] = vector3(2.0f, -1.0f, 3.0f);
+	locations[4] = vector3(-2.0f, 0.0f, 0.0f);
+	locations[5] = vector3(3.0f, 0.0f, 0.0f);
+	locations[6] = vector3(-1.0f, 1.0f, -3.0f);
+	locations[7] = vector3(4.0f, 1.0f, -3.0f);
+	locations[8] = vector3(0.0f, 2.0f, -5.0f);
+	locations[9] = vector3(5.0f, 2.0f, -5.0f);
+	locations[10] = vector3(1.0f, 3.0f, -5.0f);
 }
 
 void AppClass::Update(void)
@@ -36,6 +48,11 @@ void AppClass::Update(void)
 #pragma endregion
 
 #pragma region Your Code goes here
+	
+	trackTime += fTimeSpan;
+	
+	
+
 	m_pMeshMngr->SetModelMatrix(IDENTITY_M4, "WallEye");
 #pragma endregion
 
@@ -82,5 +99,10 @@ void AppClass::Display(void)
 
 void AppClass::Release(void)
 {
+	if (locations != nullptr)
+	{
+		delete[] locations;
+		locations = nullptr;
+	}
 	super::Release(); //release the memory of the inherited fields
 }
